@@ -28,8 +28,20 @@ describe(Author) do
     it('updates an author') do
       author = Author.new({:name => "Steve", :id => nil})
       author.save()
-      author.update("Bill")
-      expect(author.name).to(eq("Bill"))
+      book = Book.new({:name => "cat", :id => nil})
+      book.save()
+      author.update({:book_name => "cat"})
+      expect(author.books).to(eq([book]))
     end
   end
+
+  describe(".search") do
+    it("returns resluts based on search string") do
+    author = Author.new({:name => "Steve", :id => nil})
+    author.save()
+    author2 = Author.new({:name => "Bill", :id => nil})
+    author2.save()
+    expect(Author.search("Ill")).to(eq([author2]))
+  end
+end
 end

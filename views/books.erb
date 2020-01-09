@@ -1,0 +1,22 @@
+<form class="" action="/books" method="get">
+
+  <input type="text" name="book_search" placeholder="Enter Keyword">
+  <button type="submit" name="button">Submit</button>
+</form>
+<% if @books.any? %>
+<h3>Book Results</h3>
+<ul>
+  <% @books.each do |book| %>
+  <li> <a href="/books/<%=book.id%>"><%= book.name %></a></li>
+  <%end%>
+</ul>
+<%end%>
+
+<% if @authors.any? %>
+<h3>Author Results</h3>
+<ul>
+  <% @authors.each do |author| %>
+  <li> <a href="/authors/<%=author.id%>"><%= author.name %></a></li>
+  <%end%>
+</ul>
+<%end%>

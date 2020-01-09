@@ -31,10 +31,18 @@ describe(Patron) do
       book = Book.new({:name => "cat", :id => nil})
       book.save()
       patron.update({:book_name => "cat"})
-      expect(patron.books).to(eq([book, "2020-01-22"]))
+      expect(patron.books).to(eq([book, "2020-01-23"]))
     end
   end
+  describe(".search") do
+    it("returns resluts based on search string") do
+    patron = Patron.new({:name => "Steve", :id => nil})
+    patron.save()
+    patron2 = Patron.new({:name => "Bill", :id => nil})
+    patron2.save()
+    expect(Patron.search("Bill")).to(eq(patron2))
+  end
+end
 
-  describe("#duedates")
 
 end

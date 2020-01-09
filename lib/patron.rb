@@ -50,16 +50,31 @@ class Patron
   def books
     books = []
     results = DB.exec("SELECT books.*, checkouts.return_date
-    FROM patrons
-    JOIN checkouts ON (patrons.id = checkouts.patron_id) JOIN books ON (checkouts.book_id = books.id)
-    WHERE patrons.id = #{id}")
-    results.each do |result|
-      id = results.first().fetch("id").to_i
-      name = results.first().fetch("name")
-      return_date = results.first().fetch("return_date")
-      books.push(Book.new({:id => id, :name => name}))
-      books.push(return_date)
+      FROM patrons
+      JOIN checkouts ON (patrons.id = checkouts.patron_id) JOIN books ON (checkouts.book_id = books.id)
+      WHERE patrons.id = #{id}")
+      results.each do |result|
+        id = results.first().fetch("id").to_i
+        name = results.first().fetch("name")
+        return_date = results.first().fetch("return_date")
+        books.push(Book.new({:id => id, :name => name}))
+        books.push(return_date)
+      end
+      books
     end
-    books
+
+    def delete()
+      DB.exec("DELETE FROM patrons WHERE id = #{@id};")
+    end
+
+    def self.search(name)
+      results = DB.exec("SELECT * FROM patrons WHERE name = '#{name}';")
+      if results.first().has_key?("name")
+        id = results.first().fetch("id").to_i
+        name = results.first().fetch("name")
+        Patron.new({:id => id, :name => name})
+      else
+         return nil
+      end
+    end
   end
-end
