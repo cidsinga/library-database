@@ -31,7 +31,7 @@ describe(Patron) do
       book = Book.new({:name => "cat", :id => nil})
       book.save()
       patron.update({:book_name => "cat"})
-      expect(patron.books).to(eq([book]))
+      expect(patron.books).to(eq([book, "2020-01-22"]))
     end
   end
 
