@@ -1,7 +1,11 @@
 require('sinatra')
-    require('sinatra/reloader')
-    require('./lib/library')
-    also_reload('lib/**/*.rb')
+require('sinatra/reloader')
+require('pry')
+require('./lib/author')
+require('./lib/patron')
+require('./lib/book')
+require('pg')
+
     get('/') do
 
     end
@@ -35,4 +39,3 @@ require('sinatra')
     get('/custom_route') do
 
     end
-    
