@@ -69,7 +69,7 @@ class Patron
 
     def self.search(name)
       results = DB.exec("SELECT * FROM patrons WHERE name = '#{name}';")
-      if results.first().has_key?("name")
+      if results.first() != nil
         id = results.first().fetch("id").to_i
         name = results.first().fetch("name")
         Patron.new({:id => id, :name => name})

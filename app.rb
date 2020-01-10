@@ -12,9 +12,19 @@ get('/') do
   erb(:index)
 end
 get('/books') do
-  @books = Book.search(params[:book_search])
-  @authors = Author.search(params[:book_search])
-  erb(:books)
+   erb(:books)
+end
+
+get('/books/search') do
+  book_search = params[:book_search]
+  author_search =  params[:book_search]
+  if (book_search =~ /^[a-z0-9 \_ \- ]*$/) || (author_search =~ /^[a-z0-9 \_ \-]*$/)
+    @books = Book.search(book_search)
+    @authors = Author.search(author_search)
+    erb(:book_results)
+  else
+    erb(:error)
+  end
 end
 
 get('/books/new') do
@@ -26,12 +36,18 @@ get('/books/:id') do
 
 end
 post('/books') do
-author = Author.new({:name => params[:author_name], :id => nil})
-author.save
-book = Book.new({:name => params[:book_title], :id => nil})
-book.save
-author.update({:book_name => book.name})
-erb(:book_new)
+  book_title = params[:book_title]
+  author_name = params[:author_name]
+  if (book_title =~ /^[a-z0-9 \_ \-]*$/) || (author_name =~ /^[a-z0-9 \_ \-]*$/)
+    author = Author.new({:name => author_name, :id => nil})
+    author.save
+    book = Book.new({:name => book_title, :id => nil})
+    book.save
+    author.update({:book_name => book.name})
+    erb(:book_new)
+  else
+    erb(:error)
+  end
 end
 
 get('/books/:id/edit') do
@@ -80,10 +96,14 @@ end
 
 post('/patrons/login') do
   user = params[:user_name]
-  results = Patron.search(user)
-  if (results != []) && (results != nil)  &&  ( user =~ /^[a-z0-9 \_ \-]*$/ )
-    id = results.first().id.to_i
-    redirect to("/patrons/#{id}")
+  if user =~ /^[a-z0-9 \_ \-]*$/
+    results = Patron.search(user)
+    unless results.nil?
+      id = results.id.to_i
+      redirect to("/patrons/#{id}")
+    else
+      erb(:error)
+    end
   else
     erb(:error)
   end
@@ -99,9 +119,13 @@ get('/patrons/:id') do
 end
 post('/patrons') do
   name = params[:user_name]
-  user = Patron.new({:name => name, :id => nil})
-  user.save()
-  erb(:admin)
+  if name =~ /^[a-z0-9 \_ \-]*$/
+    user = Patron.new({:name => name, :id => nil})
+    user.save()
+    erb(:admin)
+  else
+    erb(:error)
+  end
 end
 
 get('/patrons/:id/edit') do
